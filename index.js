@@ -38,6 +38,8 @@ app.get("/", (req, res) => {
 
 app.use("/v1/category", require("./src/routes/category.js"));
 
+app.use("/v1/format", require("./src/routes/format.js"));
+
 app.use((_, __, next) => {
     return next({
         error: "Route not found.",
