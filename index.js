@@ -30,11 +30,13 @@ app.use(express.json({
 }));
 
 // Routes and controllers initialization
-app.get("/", (_, res) => {
+app.get("/", (req, res) => {
     return res.json({
         message: "API's working well!"
     });
 });
+
+app.use("/v1/category", require("./src/routes/category.js"));
 
 app.use((_, __, next) => {
     return next({
