@@ -6,7 +6,7 @@ class Category {
     }
 
     async getAll() {
-        const exists = await query("SELECT * FROM book_category");
+        const exists = await query("SELECT category_name FROM book_category ORDER BY category_name ASC;");
         return exists.length ? exists : false;
     }
 }

@@ -40,6 +40,12 @@ app.use("/v1/category", require("./src/routes/category.js"));
 
 app.use("/v1/format", require("./src/routes/format.js"));
 
+app.use("/v1/author", require("./src/routes/author.js"));
+
+app.use("/v1/publisher", require("./src/routes/publisher.js"));
+
+app.use("/v1/language", require("./src/routes/language.js"));
+
 app.use((_, __, next) => {
     return next({
         error: "Route not found.",
