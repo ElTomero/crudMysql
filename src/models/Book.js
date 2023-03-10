@@ -16,7 +16,17 @@ class Book {
         
         const book = await query("SELECT * FROM book WHERE category_id = ?", [categoryId])
         return book.length ? book : false;
-    }  
+    }
+    
+    async getByPublisherId(publisherId) {
+        const publisher = await query("")
+        if (!publisher.length) return false;
+
+        const book = await query("")
+        return book.length ? book : false;
+
+    async getByAuthorId(authorId) {
+        
 }
 
 
