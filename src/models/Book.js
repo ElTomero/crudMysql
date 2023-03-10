@@ -14,8 +14,8 @@ class Book {
         const category = await query("SELECT * FROM book_category WHERE category_id = ?", [categoryId])
         if (!category.length) return false;
         
-        const books = await query("SELECT * FROM book WHERE category_id = ?", [categoryId])
-        return books.lenght ? books : false;
+        const book = await query("SELECT * FROM book WHERE category_id = ?", [categoryId])
+        return book.length ? book : false;
     }  
 }
 
