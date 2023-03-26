@@ -9,23 +9,28 @@ class User {
         return result;
     }
         
-    async getUserId(email_id) {
-        const result = await query("SELECT id FROM users WHERE email_id = ?", [email_id]);
-        return result.length ? result[0].id : null;
+    async getUserId(user_id) {
+        const id = await query("SELECT id FROM users WHERE user_id = ?", [user_id]);        
+        return id.length ? id[0].id : null;
     }
-        
-    async generateAuthToken(email_id, role) {
-        const userId = await this.getUserId(email_id);
+    
+    async getUserRole(role) {
+        const result = await query("SELECT role FROM users WHERE role = ?", [role]);
+        return role.lenght ? result[0].role : null;
+    }
+
+    async generateAuthToken(user_id, role) {
+        const userId = await this.getUserId(user_id);
         if (!userId) return null;
-        
-        const privateKey = fs.readFileSync('private.key');
-        const token = jwt.sign({id: userId, role: role}, privateKey, {algorithm: 'RS256'});
+        const role = await this.getUserRole(role);
+        if (!role) return null;
+        const token = jwt.sign({ id: userId, role: role }, 'chiave', {expiresIn: '1h'});
         return token;
     }
         
-    async registerUser (name, surname, email_id, password, role) {
+    async registerUser (name, surname, email_id, password, role, user_id) {
         const result = await this.createUser(name, surname, email_id, password, role);
-        const token = await this.generateAuthToken(email_id, role);
+        const token = await this.generateAuthToken(user_id, role);
         return token;
     }
 }
