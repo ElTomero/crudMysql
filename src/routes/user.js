@@ -16,6 +16,10 @@ router.post("/registration", async(req, res ) => {
     } catch (error) {
         console.error(error);
         return response(res, { message: 'Si è verificato un errore durante la registrazione' }, 500);
-    }
+    } 
+});
+
+router.post("/login", async(req, res) {
+    const
 });
 
