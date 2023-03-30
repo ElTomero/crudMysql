@@ -37,13 +37,20 @@ class User {
         return token;
     }
 
-    async getUserPasswdEmailId(user_id) {
-        const result = await query('SELECT email_id, password FROM users WHERE user_id = ?', [user_id])
-        return result.length ? result : false
+    async getUserPasswd(user_id) {
+        const result = await query('SELECT password FROM users WHERE user_id = ?', [user_id]);
+        return result.length ? result : false;
     }
 
-    async verifyUserByToken(token) {
-        const veryfyToken = 
+    async getUserEmailId(user_id) {
+        const result = await query('SELECT email_id FROM users WHERE user_id = ?', [user_id]);
+        return result.length ? result : false;
+        }
+    
+    async verifyUserByPassword(user_id) {
+        const resPassword = await this.getUserPasswd(user_id);
+        const resEmail = await this.getUserEmailId(user_id);
+        const resPasswd = await bcrypt.compare()
     }
 
 }
