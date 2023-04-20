@@ -6,14 +6,15 @@ const saltRounds = 10
 class User {
     constructor () {}
         
-    async createUser(name, surname, email_id, password, role) {
-        const hashedPasswd = await bcrypt.hash(password, saltRounds)
-        const result = await query("INSERT INTO users (name, surname, email_id, password, role) VALUES (?, ?, ?, ?, ?)", [name, surname, email_id, hashedPasswd, role]);
+    async createUser(name, surname, email_id, password) {
+        const hashedPasswd = await bcrypt.hash(password, saltRounds);
+        const createdAt = new Date();
+        const result = await query("INSERT INTO users (name, surname, email_id, password, registration_date) VALUES (?, ?, ?, ?, ?)", [name, surname, email_id, hashedPasswd, createdAt]);
         return result;
     }
         
     async getUserId(user_id) {
-        const id = await query("SELECT id FROM users WHERE user_id = ?", [user_id]);        
+        const id = await query("SELECT user_id FROM users WHERE user_id = ?", [user_id]);        
         return id.length ? id[0].id : null;
     }
     
@@ -22,18 +23,15 @@ class User {
         return result.length ? result[0].role : null;
     }
 
-    async generateAuthToken(user_id, User_role) {
-        const userId = await this.getUserId(user_id);
-        if (!userId) return null;
-        const role = await this.getUserRole(User_role);
-        if (!role) return null;
-        const token = jwt.sign({ id: userId, role: role }, 'secret', {expiresIn: '1h'});
+    async generateAuthToken(user_id) {
+        const token = jwt.sign({ id: user_id}, 'secret', {expiresIn: '1h'});
         return token;
     }
         
-    async registerUser(name, surname, email_id, hashedPasswd, role, user_id) {
-        const result = await this.createUser(name, surname, email_id, hashedPasswd, role);
-        const token = await this.generateAuthToken(user_id, role);
+    async registerUser(name, surname, email_id, hashedPasswd) {
+        const result = await this.createUser(name, surname, email_id, hashedPasswd);
+        const user = await query("SELECT user_id FROM users WHERE email_id = ?", [email_id]);
+        const token = await this.generateAuthToken(user[0].user_id);
         return token;
     }
 
@@ -48,8 +46,9 @@ class User {
         }
     
     async verifyUserByPassword(user_id) {
+        
         const resPassword = await this.getUserPasswd(user_id);
-        const resEmail = await this.getUserEmailId(user_id);
+        //const resEmail = await this.getUserEmailId(user_id);
         const resPasswd = await bcrypt.compare()
     }
 
